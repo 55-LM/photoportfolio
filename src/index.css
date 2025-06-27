@@ -1,0 +1,41 @@
+@font-face {
+  font-family: 'Editorial New';
+  src: url('./fonts/EditorialNew-UltralightItalic (2).otf') format('opentype');
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('./fonts/NeueMontreal-Regular.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neue Montreal';
+  src: url('./fonts/NeueMontreal-Light.otf') format('opentype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/*Grain effect on background*/
+.grain-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  filter: url('#grain');
+  opacity: 0.08; 
+}
+
+/*Content above the grain */
+.grain-bg > * {
+  position: relative;
+  z-index: 10;
+}
