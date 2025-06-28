@@ -50,11 +50,11 @@ export default function Gallery({ glowOpacity = 0.9 }) {
           return (
             <div
               key={i}
-              className="relative mb-6 break-inside-avoid group cursor-pointer"
+              className="relative mb-6 break-inside-avoid group cursor-pointer overflow-visible"
             >
               <div
                 className={clsx(
-                  'absolute inset-[-10px] blur-3xl transition-opacity duration-500 z-0',
+                  'absolute inset-[-10px] blur-3xl transition-opacity duration-300 z-0',
                   {
                     'opacity-100': showGlow,
                     'group-hover:opacity-100 opacity-0': !showGlow,
