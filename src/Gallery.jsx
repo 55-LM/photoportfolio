@@ -54,7 +54,7 @@ export default function Gallery({ glowOpacity = 0.9 }) {
             >
               <div
                 className={clsx(
-                  'absolute inset-[-10px] blur-3xl transition-opacity duration-500 z-0',
+                  'absolute inset-[-30px] blur-3xl transition-opacity duration-500 z-0 pointer-events-none',
                   {
                     'opacity-100': showGlow,
                     'group-hover:opacity-100 opacity-0': !showGlow,
