@@ -20,7 +20,7 @@ export default function Gallery({ glowOpacity = 0.9 }) {
 
   return (
     <>
-      <div className="overflow-visible">
+      <div className="relative z-10 overflow-visible">
         <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 p-4 overflow-visible">
           {imageEntries.map(([path, mod], i) => {
             const [glowColor, setGlowColor] = useState('rgba(255,255,255,0.2)');
@@ -53,15 +53,21 @@ export default function Gallery({ glowOpacity = 0.9 }) {
                 key={i}
                 className="relative mb-6 break-inside-avoid group cursor-pointer overflow-visible"
               >
+                {/* Glow Element */}
                 <div
                   className={clsx(
-                    'absolute inset-[-40px] blur-3xl transition-opacity duration-500 z-0 pointer-events-none',
+                    'absolute transition-opacity duration-500 z-0 pointer-events-none',
                     {
                       'opacity-100': showGlow,
                       'group-hover:opacity-100 opacity-0': !showGlow,
                     }
                   )}
-                  style={{ background: glowColor }}
+                  style={{
+                    background: glowColor,
+                    // Wider glow box to reduce cutoff
+                    inset: '-50px',
+                    filter: isTouchDevice ? 'blur(70px)' : 'blur(90px)',
+                  }}
                 ></div>
 
                 <img
