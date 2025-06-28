@@ -20,7 +20,7 @@ export default function Gallery({ glowOpacity = 0.9 }) {
 
   return (
     <>
-      <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 p-4">
+      <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 p-4 overflow-visible">
         {imageEntries.map(([path, mod], i) => {
           const [glowColor, setGlowColor] = useState('rgba(255,255,255,0.2)');
 
