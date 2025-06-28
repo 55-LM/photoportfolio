@@ -20,35 +20,34 @@ function App() {
     <div className="relative min-h-screen text-white bg-[#0C0C0C]">
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8">
         {/* Header */}
-        <header className="pt-12 pb-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+      <header className="pt-12 pb-8">
+        <div className="flex justify-between items-start md:items-center gap-6">
             {/* Logo and Bio */}
-            <div className="flex flex-col items-start space-y-1 md:pl-2 lg:pl-4">
-              <img
+            <div className="flex flex-col items-start space-y-2 md:pl-3 lg:pl-5">
+            <img
                 src={logo}
                 alt="Logo"
                 className="w-24 h-auto object-contain"
-              />
-              <p
+            />
+            <p
                 className="text-sm sm:text-base max-w-2xl leading-relaxed bg-gradient-to-b from-[#AFAFAF] to-[#606060] bg-clip-text text-transparent"
                 style={{ fontFamily: 'Neue Montreal', fontWeight: 300 }}
-              >
-                Based in Toronto.   Sony a6700.   Finding clarity in chaos.
-              </p>
+            >
+                Based in Toronto.  Sony a6700.  Finding clarity in chaos.
+            </p>
             </div>
 
             {/* Social Media */}
-            <div className="flex space-x-4 md:pr-3 lg:pr-5 mt-4 md:mt-0">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+            <div className="flex space-x-4 md:pr-3 lg:pr-5 pt-1">
+            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
                 <img src={xlogo} alt="X" className="w-6 h-6 object-contain" />
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
                 <img src={instalogo} alt="Instagram" className="w-6 h-6 object-contain" />
-              </a>
+            </a>
             </div>
-          </div>
+        </div>
         </header>
-
         {/* Gallery */}
         <Gallery glowOpacity={0.9} />
 
