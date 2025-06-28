@@ -23,7 +23,7 @@ function App() {
         <header className="pt-12 pb-8">
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
             {/* Logo and Bio */}
-            <div className="flex flex-col items-start space-y-2 md:pl-3 lg:pl-5">
+            <div className="flex flex-col items-start space-y-1 md:pl-2 lg:pl-4">
               <img
                 src={logo}
                 alt="Logo"
@@ -33,7 +33,7 @@ function App() {
                 className="text-sm sm:text-base max-w-2xl leading-relaxed bg-gradient-to-b from-[#AFAFAF] to-[#606060] bg-clip-text text-transparent"
                 style={{ fontFamily: 'Neue Montreal', fontWeight: 300 }}
               >
-                Photographer based in Toronto. Finding clarity in chaos.
+                Based in Toronto.   Sony a6700.   Finding clarity in chaos.
               </p>
             </div>
 
