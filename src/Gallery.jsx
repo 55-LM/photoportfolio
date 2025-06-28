@@ -33,16 +33,13 @@ export default function Gallery({ glowOpacity = 0.9 }) {
           const handleClick = (e) => {
             if (isTouchDevice) {
               if (tappedIndex === i) {
-                // second tap = open lightbox
                 setLightboxSrc(e.target.src);
                 setTappedIndex(null);
                 setTimeout(() => setIsAnimating(true), 20);
               } else {
-                // first tap = show glow
                 setTappedIndex(i);
               }
             } else {
-              // desktop = open immediately
               setLightboxSrc(e.target.src);
               setTimeout(() => setIsAnimating(true), 20);
             }
@@ -55,10 +52,9 @@ export default function Gallery({ glowOpacity = 0.9 }) {
               key={i}
               className="relative mb-6 break-inside-avoid group cursor-pointer"
             >
-              {/*Glow: tap (mobile) or hover (desktop)*/}
               <div
                 className={clsx(
-                  'absolute inset-[-10px] blur-3xl transition-opacity duration-700 z-0',
+                  'absolute inset-[-10px] blur-3xl transition-opacity duration-500 z-0',
                   {
                     'opacity-100': showGlow,
                     'group-hover:opacity-100 opacity-0': !showGlow,
@@ -79,7 +75,7 @@ export default function Gallery({ glowOpacity = 0.9 }) {
         })}
       </div>
 
-      {/*Lightbox*/}
+      {/* Lightbox */}
       {lightboxSrc && (
         <div className="lightbox-open fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
           <button
