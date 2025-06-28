@@ -20,59 +20,61 @@ export default function Gallery({ glowOpacity = 0.9 }) {
 
   return (
     <>
-      <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 p-4 overflow-visible">
-        {imageEntries.map(([path, mod], i) => {
-          const [glowColor, setGlowColor] = useState('rgba(255,255,255,0.2)');
+      <div className="overflow-visible">
+        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 p-4 overflow-visible">
+          {imageEntries.map(([path, mod], i) => {
+            const [glowColor, setGlowColor] = useState('rgba(255,255,255,0.2)');
 
-          const handleLoad = (e) => {
-            const color = fac.getColor(e.target);
-            const rgba = `rgba(${color.value[0]}, ${color.value[1]}, ${color.value[2]}, ${glowOpacity})`;
-            setGlowColor(rgba);
-          };
+            const handleLoad = (e) => {
+              const color = fac.getColor(e.target);
+              const rgba = `rgba(${color.value[0]}, ${color.value[1]}, ${color.value[2]}, ${glowOpacity})`;
+              setGlowColor(rgba);
+            };
 
-          const handleClick = (e) => {
-            if (isTouchDevice) {
-              if (tappedIndex === i) {
-                setLightboxSrc(e.target.src);
-                setTappedIndex(null);
-                setTimeout(() => setIsAnimating(true), 20);
+            const handleClick = (e) => {
+              if (isTouchDevice) {
+                if (tappedIndex === i) {
+                  setLightboxSrc(e.target.src);
+                  setTappedIndex(null);
+                  setTimeout(() => setIsAnimating(true), 20);
+                } else {
+                  setTappedIndex(i);
+                }
               } else {
-                setTappedIndex(i);
+                setLightboxSrc(e.target.src);
+                setTimeout(() => setIsAnimating(true), 20);
               }
-            } else {
-              setLightboxSrc(e.target.src);
-              setTimeout(() => setIsAnimating(true), 20);
-            }
-          };
+            };
 
-          const showGlow = isTouchDevice ? tappedIndex === i : false;
+            const showGlow = isTouchDevice ? tappedIndex === i : false;
 
-          return (
-            <div
-              key={i}
-              className="relative mb-6 break-inside-avoid group cursor-pointer overflow-visible"
-            >
+            return (
               <div
-                className={clsx(
-                  'absolute inset-[-30px] blur-3xl transition-opacity duration-500 z-0 pointer-events-none',
-                  {
-                    'opacity-100': showGlow,
-                    'group-hover:opacity-100 opacity-0': !showGlow,
-                  }
-                )}
-                style={{ background: glowColor }}
-              ></div>
+                key={i}
+                className="relative mb-6 break-inside-avoid group cursor-pointer overflow-visible"
+              >
+                <div
+                  className={clsx(
+                    'absolute inset-[-40px] blur-3xl transition-opacity duration-500 z-0 pointer-events-none',
+                    {
+                      'opacity-100': showGlow,
+                      'group-hover:opacity-100 opacity-0': !showGlow,
+                    }
+                  )}
+                  style={{ background: glowColor }}
+                ></div>
 
-              <img
-                src={mod.default}
-                alt={`Photo ${i}`}
-                onLoad={handleLoad}
-                onClick={handleClick}
-                className="w-full h-auto object-cover relative z-10"
-              />
-            </div>
-          );
-        })}
+                <img
+                  src={mod.default}
+                  alt={`Photo ${i}`}
+                  onLoad={handleLoad}
+                  onClick={handleClick}
+                  className="w-full h-auto object-cover relative z-10"
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {/* Lightbox */}
