@@ -18,8 +18,8 @@ export default function Gallery() {
 
   return (
     <>
-      <div className="overflow-visible pb-20 sm:pb-12">
-        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-8 p-6 [column-gap:2rem] overflow-visible">
+      <div className="overflow-visible pb-20 sm:pb-12" style={{ overflow: 'visible' }}>
+        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-8 p-6 [column-gap:2rem] overflow-visible" style={{ overflow: 'visible' }}>
           {imageEntries.map(([path, mod], i) => {
             const [glowDataUrl, setGlowDataUrl] = useState(null);
 
@@ -81,12 +81,14 @@ export default function Gallery() {
 
             const handleClick = (e) => {
               if (isTouchDevice) {
+                e.preventDefault();
                 if (tappedIndex === i) {
                   setLightboxSrc(e.target.src);
                   setTappedIndex(null);
                   setTimeout(() => setIsAnimating(true), 20);
                 } else {
                   setTappedIndex(i);
+                  return;
                 }
               } else {
                 setLightboxSrc(e.target.src);
@@ -128,7 +130,8 @@ export default function Gallery() {
                       src={mod.default}
                       alt={`Photo ${i}`}
                       onLoad={handleLoad}
-                      onClick={handleClick}
+                      onClick={!isTouchDevice ? handleClick : undefined}
+                      onTouchStart={isTouchDevice ? handleClick : undefined}
                       className="block h-auto object-cover relative z-10"
                     />
                   </div>
