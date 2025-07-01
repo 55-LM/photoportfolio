@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import clsx from 'clsx';
 
 const images = import.meta.glob('./images/*.{jpg,jpeg,png}', { eager: true });
@@ -9,7 +9,14 @@ export default function Gallery() {
   const [lightboxSrc, setLightboxSrc] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [tappedIndex, setTappedIndex] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setIsMobile(window.innerWidth < 640);
+    }
+  }, []);
 
   const handleClose = () => {
     setIsAnimating(false);
@@ -18,9 +25,8 @@ export default function Gallery() {
 
   return (
     <>
-      {/* Apply padding to the outermost container to prevent glow clipping */}
-      <div className="overflow-visible pb-20 sm:pb-12 px-[30px] sm:px-[30px] box-border">
-        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-8 pt-6 [column-gap:2rem]">
+      <div className="overflow-visible pb-20 sm:pb-12">
+        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-8 p-6 [column-gap:2rem]">
           {imageEntries.map(([path, mod], i) => {
             const [glowDataUrl, setGlowDataUrl] = useState(null);
 
@@ -109,15 +115,16 @@ export default function Gallery() {
                       alt=""
                       aria-hidden="true"
                       className={clsx(
-                        'absolute top-[px] left-[px] z-0 blur-2xl transition-opacity duration-500 pointer-events-none',
+                        'absolute top-0 left-0 z-0 transition-opacity duration-500 pointer-events-none',
                         {
                           'opacity-100': showGlow,
                           'group-hover:opacity-80 opacity-0': !showGlow,
                         }
                       )}
                       style={{
-                        width: 'calc(100% + 0px)',
-                        height: 'calc(100% + 0px)',
+                        width: '100%',
+                        height: '100%',
+                        filter: isMobile ? 'blur(10px) brightness(0.7)' : 'blur(16px) brightness(1)'
                       }}
                     />
                   )}
