@@ -1,12 +1,10 @@
 import { useState } from 'react';
-import { FastAverageColor } from 'fast-average-color';
 import clsx from 'clsx';
 
 const images = import.meta.glob('./images/*.{jpg,jpeg,png}', { eager: true });
 
-export default function Gallery({ glowOpacity = 0.9 }) {
+export default function Gallery() {
   const imageEntries = Object.entries(images);
-  const fac = new FastAverageColor();
 
   const [lightboxSrc, setLightboxSrc] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -21,14 +19,64 @@ export default function Gallery({ glowOpacity = 0.9 }) {
   return (
     <>
       <div className="overflow-visible pb-20 sm:pb-12">
-        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-6 p-4 overflow-visible">
+        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-8 p-6 [column-gap:2rem]">
           {imageEntries.map(([path, mod], i) => {
-            const [glowColor, setGlowColor] = useState('rgba(255,255,255,0.2)');
+            const [glowDataUrl, setGlowDataUrl] = useState(null);
 
             const handleLoad = (e) => {
-              const color = fac.getColor(e.target);
-              const rgba = `rgba(${color.value[0]}, ${color.value[1]}, ${color.value[2]}, ${glowOpacity})`;
-              setGlowColor(rgba);
+              const img = e.target;
+              const w = img.naturalWidth;
+              const h = img.naturalHeight;
+              const bleed = 30;
+
+              const canvas = document.createElement('canvas');
+              const ctx = canvas.getContext('2d');
+              canvas.width = w;
+              canvas.height = h;
+              ctx.drawImage(img, 0, 0);
+
+              const glowCanvas = document.createElement('canvas');
+              const glowCtx = glowCanvas.getContext('2d');
+              glowCanvas.width = w + bleed * 2;
+              glowCanvas.height = h + bleed * 2;
+
+              glowCtx.drawImage(canvas, bleed, bleed);
+
+              const topRow = ctx.getImageData(0, 0, w, 1);
+              for (let y = 0; y < bleed; y++) {
+                glowCtx.putImageData(topRow, bleed, y);
+              }
+
+              const bottomRow = ctx.getImageData(0, h - 1, w, 1);
+              for (let y = 0; y < bleed; y++) {
+                glowCtx.putImageData(bottomRow, bleed, h + bleed + y);
+              }
+
+              const leftCol = ctx.getImageData(0, 0, 1, h);
+              for (let x = 0; x < bleed; x++) {
+                glowCtx.putImageData(leftCol, x, bleed);
+              }
+
+              const rightCol = ctx.getImageData(w - 1, 0, 1, h);
+              for (let x = 0; x < bleed; x++) {
+                glowCtx.putImageData(rightCol, w + bleed + x, bleed);
+              }
+
+              const topLeft = ctx.getImageData(0, 0, 1, 1);
+              const topRight = ctx.getImageData(w - 1, 0, 1, 1);
+              const bottomLeft = ctx.getImageData(0, h - 1, 1, 1);
+              const bottomRight = ctx.getImageData(w - 1, h - 1, 1, 1);
+
+              for (let y = 0; y < bleed; y++) {
+                for (let x = 0; x < bleed; x++) {
+                  glowCtx.putImageData(topLeft, x, y);
+                  glowCtx.putImageData(topRight, w + bleed + x, y);
+                  glowCtx.putImageData(bottomLeft, x, h + bleed + y);
+                  glowCtx.putImageData(bottomRight, w + bleed + x, h + bleed + y);
+                }
+              }
+
+              setGlowDataUrl(glowCanvas.toDataURL());
             };
 
             const handleClick = (e) => {
@@ -51,33 +99,42 @@ export default function Gallery({ glowOpacity = 0.9 }) {
             return (
               <div
                 key={i}
-                className="relative mb-6 break-inside-avoid group cursor-pointer overflow-visible"
+                className="inline-block w-full mb-8 break-inside-avoid group cursor-pointer"
               >
-                <div
-                  className={clsx(
-                    'absolute inset-[-40px] blur-3xl transition-opacity duration-500 z-0 pointer-events-none',
-                    {
-                      'opacity-100': showGlow,
-                      'group-hover:opacity-100 opacity-0': !showGlow,
-                    }
+                <div className="relative w-full overflow-visible">
+                  {glowDataUrl && (
+                    <img
+                      src={glowDataUrl}
+                      alt=""
+                      aria-hidden="true"
+                      className={clsx(
+                        'absolute top-[px] left-[px] z-0 blur-2xl transition-opacity duration-500 pointer-events-none',
+                        {
+                          'opacity-100': showGlow,
+                          'group-hover:opacity-80 opacity-0': !showGlow,
+                        }
+                      )}
+                      style={{
+                        width: 'calc(100% + 0px)',
+                        height: 'calc(100% + 0px)',
+                      }}
+                    />
                   )}
-                  style={{ background: glowColor }}
-                ></div>
 
-                <img
-                  src={mod.default}
-                  alt={`Photo ${i}`}
-                  onLoad={handleLoad}
-                  onClick={handleClick}
-                  className="w-full h-auto object-cover relative z-10"
-                />
+                  <img
+                    src={mod.default}
+                    alt={`Photo ${i}`}
+                    onLoad={handleLoad}
+                    onClick={handleClick}
+                    className="w-full h-auto object-cover relative z-10"
+                  />
+                </div>
               </div>
             );
           })}
         </div>
       </div>
 
-      {/* Lightbox */}
       {lightboxSrc && (
         <div className="lightbox-open fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
           <button
