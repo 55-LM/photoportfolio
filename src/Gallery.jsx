@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import clsx from 'clsx';
+import Masonry from 'react-masonry-css';
 
 const images = import.meta.glob('./images/*.{jpg,jpeg,png}', { eager: true });
 
@@ -19,7 +20,17 @@ export default function Gallery() {
   return (
     <>
       <div className="overflow-visible pb-20 sm:pb-12" style={{ overflow: 'visible' }}>
-        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-8 p-6 [column-gap:2rem] overflow-visible" style={{ overflow: 'visible' }}>
+        <Masonry
+          breakpointCols={{
+            default: 4,
+            1280: 4,
+            1024: 3,
+            640: 2,
+            0: 1,
+          }}
+          className="my-masonry-grid p-6"
+          columnClassName="my-masonry-grid_column"
+        >
           {imageEntries.map(([path, mod], i) => {
             const [glowDataUrl, setGlowDataUrl] = useState(null);
 
@@ -139,7 +150,7 @@ export default function Gallery() {
               </div>
             );
           })}
-        </div>
+        </Masonry>
       </div>
 
       {lightboxSrc && (
