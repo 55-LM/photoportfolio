@@ -18,8 +18,9 @@ export default function Gallery() {
 
   return (
     <>
-      <div className="overflow-visible pb-20 sm:pb-12">
-        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-8 p-6 [column-gap:2rem]">
+      {/* Apply padding to the outermost container to prevent glow clipping */}
+      <div className="overflow-visible pb-20 sm:pb-12 px-[30px] sm:px-[30px] box-border">
+        <div className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-x-8 pt-6 [column-gap:2rem]">
           {imageEntries.map(([path, mod], i) => {
             const [glowDataUrl, setGlowDataUrl] = useState(null);
 
