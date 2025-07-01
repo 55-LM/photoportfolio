@@ -10,7 +10,11 @@ function App() {
     const body = document.body;
     const observer = new MutationObserver(() => {
       const lightbox = document.querySelector('.lightbox-open');
-      body.classList.toggle('overflow-hidden', !!lightbox);
+      if (lightbox) {
+        body.classList.add('no-scroll');
+      } else {
+        body.classList.remove('no-scroll');
+      }
     });
     observer.observe(body, { childList: true, subtree: true });
     return () => observer.disconnect();

@@ -11,6 +11,8 @@ export default function Gallery() {
   const [isAnimating, setIsAnimating] = useState(false);
   const [tappedIndex, setTappedIndex] = useState(null);
   const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
+  const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
+  const bleed = isMobile ? 12 : 30;
 
   const handleClose = () => {
     setIsAnimating(false);
@@ -38,7 +40,6 @@ export default function Gallery() {
               const img = e.target;
               const w = img.naturalWidth;
               const h = img.naturalHeight;
-              const bleed = 30;
 
               const canvas = document.createElement('canvas');
               const ctx = canvas.getContext('2d');
@@ -132,8 +133,8 @@ export default function Gallery() {
                           left: '50%',
                           top: '50%',
                           transform: 'translate(-50%, -50%)',
-                          width: 'calc(100% + 60px)',
-                          height: 'calc(100% + 60px)',
+                          width: `calc(100% + ${bleed * 2}px)`,
+                          height: `calc(100% + ${bleed * 2}px)`,
                         }}
                       />
                     )}
@@ -154,7 +155,7 @@ export default function Gallery() {
       </div>
 
       {lightboxSrc && (
-        <div className="lightbox-open fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50">
+        <div className="lightbox-open fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center z-50 pt-16">
           <button
             onClick={handleClose}
             className="absolute top-6 right-6 text-4xl font-light bg-gradient-to-b from-[#AFAFAF] to-[#606060] bg-clip-text text-transparent z-20"
