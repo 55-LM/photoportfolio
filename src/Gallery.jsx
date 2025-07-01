@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import clsx from 'clsx';
 
 const images = import.meta.glob('./images/*.{jpg,jpeg,png}', { eager: true });
@@ -9,14 +9,7 @@ export default function Gallery() {
   const [lightboxSrc, setLightboxSrc] = useState(null);
   const [isAnimating, setIsAnimating] = useState(false);
   const [tappedIndex, setTappedIndex] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
   const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
-
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setIsMobile(window.innerWidth < 640);
-    }
-  }, []);
 
   const handleClose = () => {
     setIsAnimating(false);
@@ -34,7 +27,7 @@ export default function Gallery() {
               const img = e.target;
               const w = img.naturalWidth;
               const h = img.naturalHeight;
-              const bleed = 30;
+              const bleed = window.innerWidth < 640 ? 15 : 30; // smaller bleed on mobile
 
               const canvas = document.createElement('canvas');
               const ctx = canvas.getContext('2d');
@@ -46,33 +39,27 @@ export default function Gallery() {
               const glowCtx = glowCanvas.getContext('2d');
               glowCanvas.width = w + bleed * 2;
               glowCanvas.height = h + bleed * 2;
-
               glowCtx.drawImage(canvas, bleed, bleed);
 
+              // Edge replication
               const topRow = ctx.getImageData(0, 0, w, 1);
-              for (let y = 0; y < bleed; y++) {
-                glowCtx.putImageData(topRow, bleed, y);
-              }
-
               const bottomRow = ctx.getImageData(0, h - 1, w, 1);
-              for (let y = 0; y < bleed; y++) {
-                glowCtx.putImageData(bottomRow, bleed, h + bleed + y);
-              }
-
               const leftCol = ctx.getImageData(0, 0, 1, h);
-              for (let x = 0; x < bleed; x++) {
-                glowCtx.putImageData(leftCol, x, bleed);
-              }
-
               const rightCol = ctx.getImageData(w - 1, 0, 1, h);
-              for (let x = 0; x < bleed; x++) {
-                glowCtx.putImageData(rightCol, w + bleed + x, bleed);
-              }
-
               const topLeft = ctx.getImageData(0, 0, 1, 1);
               const topRight = ctx.getImageData(w - 1, 0, 1, 1);
               const bottomLeft = ctx.getImageData(0, h - 1, 1, 1);
               const bottomRight = ctx.getImageData(w - 1, h - 1, 1, 1);
+
+              for (let y = 0; y < bleed; y++) {
+                glowCtx.putImageData(topRow, bleed, y);
+                glowCtx.putImageData(bottomRow, bleed, h + bleed + y);
+              }
+
+              for (let x = 0; x < bleed; x++) {
+                glowCtx.putImageData(leftCol, x, bleed);
+                glowCtx.putImageData(rightCol, w + bleed + x, bleed);
+              }
 
               for (let y = 0; y < bleed; y++) {
                 for (let x = 0; x < bleed; x++) {
@@ -102,11 +89,12 @@ export default function Gallery() {
             };
 
             const showGlow = isTouchDevice ? tappedIndex === i : false;
+            const isMobile = typeof window !== 'undefined' && window.innerWidth < 640;
 
             return (
               <div
                 key={i}
-                className="inline-block w-full mb-8 break-inside-avoid group cursor-pointer"
+                className="inline-block w-full mb-8 break-inside-avoid group cursor-pointer px-[15px] sm:px-0"
               >
                 <div className="relative w-full overflow-visible">
                   {glowDataUrl && (
@@ -115,16 +103,16 @@ export default function Gallery() {
                       alt=""
                       aria-hidden="true"
                       className={clsx(
-                        'absolute top-0 left-0 z-0 transition-opacity duration-500 pointer-events-none',
+                        'absolute top-[px] left-[px] sm:top-[px] sm:left-[px] z-0 transition-opacity duration-500 pointer-events-none',
+                        'blur-xl sm:blur-2xl',
                         {
                           'opacity-100': showGlow,
                           'group-hover:opacity-80 opacity-0': !showGlow,
                         }
                       )}
                       style={{
-                        width: '100%',
-                        height: '100%',
-                        filter: isMobile ? 'blur(10px) brightness(0.7)' : 'blur(16px) brightness(1)'
+                        width: isMobile ? 'calc(100%)' : 'calc(100%)',
+                        height: isMobile ? 'calc(100%)' : 'calc(100%)',
                       }}
                     />
                   )}
