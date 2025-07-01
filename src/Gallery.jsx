@@ -102,33 +102,36 @@ export default function Gallery() {
                 className="inline-block w-full mb-8 break-inside-avoid group cursor-pointer overflow-visible"
               >
                 <div className="relative w-full overflow-visible">
-                  {glowDataUrl && (
+                  <div className="relative inline-block">
+                    {glowDataUrl && (
+                      <img
+                        src={glowDataUrl}
+                        alt=""
+                        aria-hidden="true"
+                        className={clsx(
+                          'absolute z-0 blur-2xl transition-opacity duration-500 pointer-events-none',
+                          {
+                            'opacity-100': showGlow,
+                            'group-hover:opacity-80 opacity-0': !showGlow,
+                          }
+                        )}
+                        style={{
+                          left: '50%',
+                          top: '50%',
+                          transform: 'translate(-50%, -50%)',
+                          width: 'calc(100% + 60px)',
+                          height: 'calc(100% + 60px)',
+                        }}
+                      />
+                    )}
                     <img
-                      src={glowDataUrl}
-                      alt=""
-                      aria-hidden="true"
-                      className={clsx(
-                        'absolute inset-0 z-0 blur-2xl transition-opacity duration-500 pointer-events-none',
-                        {
-                          'opacity-100': showGlow,
-                          'group-hover:opacity-80 opacity-0': !showGlow,
-                        }
-                      )}
-                      style={{
-                        transform: 'translate(0px, 0px)',
-                        width: 'calc(100%)',
-                        height: 'calc(100%)',
-                      }}
+                      src={mod.default}
+                      alt={`Photo ${i}`}
+                      onLoad={handleLoad}
+                      onClick={handleClick}
+                      className="block h-auto object-cover relative z-10"
                     />
-                  )}
-
-                  <img
-                    src={mod.default}
-                    alt={`Photo ${i}`}
-                    onLoad={handleLoad}
-                    onClick={handleClick}
-                    className="w-full h-auto object-cover relative z-10"
-                  />
+                  </div>
                 </div>
               </div>
             );
