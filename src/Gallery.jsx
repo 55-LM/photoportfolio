@@ -21,7 +21,7 @@ export default function Gallery() {
 
   return (
     <>
-      <div className="overflow-visible pb-20 sm:pb-12" style={{ overflow: 'visible' }}>
+      <div className="overflow-visible pb-20 sm:pb-12" style={{ overflow: 'visible', paddingRight: 30, paddingBottom: 30 }}>
         <Masonry
           breakpointCols={{
             default: 4,
