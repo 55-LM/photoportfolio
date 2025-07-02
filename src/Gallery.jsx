@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import clsx from 'clsx';
-import Masonry from 'react-masonry-css';
 import GlowPortal from './GlowPortal';
+import Masonry from 'react-masonry-css';
 
 const images = import.meta.glob('./images/*.{jpg,jpeg,png}', { eager: true });
 
@@ -15,11 +15,47 @@ export default function Gallery() {
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
   const bleed = isMobile ? 4 : 16;
   const [glowPortal, setGlowPortal] = useState({ show: false, src: null, left: 0, top: 0, width: 0, height: 0, opacity: 0.15 });
+  const [scrollY, setScrollY] = useState(0);
 
   const handleClose = () => {
     setIsAnimating(false);
-    setTimeout(() => setLightboxSrc(null), 200);
+    setTimeout(() => {
+      setLightboxSrc(null);
+      window.scrollTo(0, scrollY);
+    }, 200);
   };
+
+  const handleOpenLightbox = (src) => {
+    setScrollY(window.scrollY);
+    setLightboxSrc(src);
+    setTimeout(() => setIsAnimating(true), 20);
+  };
+
+  useEffect(() => {
+    if (lightboxSrc) {
+      // Lock scroll
+      const y = window.scrollY;
+      setScrollY(y);
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${y}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      document.body.style.width = '100vw';
+    } else {
+      // Unlock scroll
+      const y = scrollY;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+      setTimeout(() => {
+        window.scrollTo(0, y);
+      }, 0);
+    }
+  }, [lightboxSrc]);
 
   return (
     <>
@@ -94,20 +130,20 @@ export default function Gallery() {
             };
 
             const handleClick = (e) => {
+              e.preventDefault();
+              e.stopPropagation();
               if (isTouchDevice) {
-                e.preventDefault();
                 if (tappedIndex === i) {
-                  setLightboxSrc(e.target.src);
+                  handleOpenLightbox(e.target.src);
                   setTappedIndex(null);
-                  setTimeout(() => setIsAnimating(true), 20);
                 } else {
                   setTappedIndex(i);
-                  return;
+                  return false;
                 }
               } else {
-                setLightboxSrc(e.target.src);
-                setTimeout(() => setIsAnimating(true), 20);
+                handleOpenLightbox(e.target.src);
               }
+              return false;
             };
 
             const showGlow = isTouchDevice ? tappedIndex === i : false;
@@ -150,6 +186,7 @@ export default function Gallery() {
                       alt={`Photo ${i}`}
                       onLoad={handleLoad}
                       onClick={!isTouchDevice ? handleClick : undefined}
+                      tabIndex={-1}
                       className="block h-auto object-cover relative z-10"
                     />
                   </div>

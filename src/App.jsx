@@ -34,10 +34,15 @@ function App() {
                 className="w-24 h-auto object-contain"
             />
             <p
-                className="text-sm sm:text-base max-w-2xl leading-relaxed bg-gradient-to-b from-[#AFAFAF] to-[#606060] bg-clip-text text-transparent"
-                style={{ fontFamily: 'Neue Montreal', fontWeight: 300 }}
+                className="whitespace-nowrap bg-gradient-to-b from-[#AFAFAF] to-[#606060] bg-clip-text text-transparent"
+                style={{
+                  fontFamily: 'Neue Montreal',
+                  fontWeight: 300,
+                  fontSize: 'clamp(12px, 3vw, 20px)',
+                  lineHeight: 1.2,
+                }}
             >
-                Based in Toronto.  Sony a6700.  Finding clarity in chaos.
+                Based in Toronto. Sony a6700. Finding clarity in chaos.
             </p>
             </div>
 
