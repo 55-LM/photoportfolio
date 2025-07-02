@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import clsx from 'clsx';
 import Masonry from 'react-masonry-css';
+import GlowPortal from './GlowPortal';
 
 const images = import.meta.glob('./images/*.{jpg,jpeg,png}', { eager: true });
 
@@ -12,7 +13,8 @@ export default function Gallery() {
   const [tappedIndex, setTappedIndex] = useState(null);
   const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
-  const bleed = isMobile ? 6 : 30;
+  const bleed = isMobile ? 4 : 16;
+  const [glowPortal, setGlowPortal] = useState({ show: false, src: null, left: 0, top: 0, width: 0, height: 0, opacity: 0.15 });
 
   const handleClose = () => {
     setIsAnimating(false);
@@ -21,7 +23,7 @@ export default function Gallery() {
 
   return (
     <>
-      <div className="overflow-visible pb-20 sm:pb-12" style={{ overflow: 'visible' }}>
+      <div className="overflow-visible pb-20 sm:pb-12 w-full max-w-full" style={{ overflow: 'visible' }}>
         <Masonry
           breakpointCols={{
             default: 4,
@@ -30,7 +32,7 @@ export default function Gallery() {
             640: 2,
             0: 1,
           }}
-          className="my-masonry-grid p-6"
+          className="my-masonry-grid p-0 sm:p-6"
           columnClassName="my-masonry-grid_column"
         >
           {imageEntries.map(([path, mod], i) => {
@@ -109,43 +111,45 @@ export default function Gallery() {
             };
 
             const showGlow = isTouchDevice ? tappedIndex === i : false;
+            const handleShowGlow = (e) => {
+              if (!glowDataUrl) return;
+              const rect = e.target.getBoundingClientRect();
+              const scrollX = window.scrollX || window.pageXOffset;
+              const scrollY = window.scrollY || window.pageYOffset;
+              const width = rect.width + bleed * 2;
+              const height = rect.height + bleed * 2;
+              if (!glowDataUrl || width <= 0 || height <= 0) {
+                console.warn('Invalid glow portal values:', { glowDataUrl, width, height });
+                return;
+              }
+              setGlowPortal({
+                show: true,
+                src: glowDataUrl,
+                left: rect.left + scrollX - bleed,
+                top: rect.top + scrollY - bleed,
+                width,
+                height,
+                opacity: 0.5,
+              });
+            };
+            const handleHideGlow = () => setGlowPortal((g) => ({ ...g, show: false }));
 
             return (
               <div
                 key={i}
                 className="inline-block w-full mb-8 break-inside-avoid group cursor-pointer overflow-visible"
+                onMouseEnter={!isTouchDevice ? handleShowGlow : undefined}
+                onMouseLeave={!isTouchDevice ? handleHideGlow : undefined}
+                onTouchStart={isTouchDevice ? (e) => { handleShowGlow(e); handleClick(e); } : undefined}
+                onTouchEnd={isTouchDevice ? handleHideGlow : undefined}
               >
                 <div className="relative w-full overflow-visible">
                   <div className="relative inline-block">
-                    {glowDataUrl && (
-                      <img
-                        src={glowDataUrl}
-                        alt=""
-                        aria-hidden="true"
-                        className={clsx(
-                          'absolute z-0 blur-2xl transition-opacity duration-500 pointer-events-none',
-                          {
-                            'opacity-100': showGlow && !isMobile,
-                            'opacity-30': showGlow && isMobile,
-                            'group-hover:opacity-80 opacity-0': !showGlow && !isTouchDevice,
-                            'opacity-0': !showGlow && isTouchDevice,
-                          }
-                        )}
-                        style={{
-                          left: '50%',
-                          top: '50%',
-                          transform: 'translate(-50%, -50%)',
-                          width: `calc(100% + ${bleed * 2}px)`,
-                          height: `calc(100% + ${bleed * 2}px)`,
-                        }}
-                      />
-                    )}
                     <img
                       src={mod.default}
                       alt={`Photo ${i}`}
                       onLoad={handleLoad}
                       onClick={!isTouchDevice ? handleClick : undefined}
-                      onTouchStart={isTouchDevice ? handleClick : undefined}
                       className="block h-auto object-cover relative z-10"
                     />
                   </div>
@@ -179,6 +183,8 @@ export default function Gallery() {
           </div>
         </div>
       )}
+
+      <GlowPortal {...glowPortal} zIndex={2} />
     </>
   );
 }
