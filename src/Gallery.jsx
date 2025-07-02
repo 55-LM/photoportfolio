@@ -12,7 +12,7 @@ export default function Gallery() {
   const [tappedIndex, setTappedIndex] = useState(null);
   const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
-  const bleed = isMobile ? 12 : 30;
+  const bleed = isMobile ? 6 : 30;
 
   const handleClose = () => {
     setIsAnimating(false);
@@ -21,7 +21,7 @@ export default function Gallery() {
 
   return (
     <>
-      <div className="overflow-visible pb-20 sm:pb-12" style={{ overflow: 'visible', paddingRight: 30, paddingBottom: 30 }}>
+      <div className="overflow-visible pb-20 sm:pb-12" style={{ overflow: 'visible' }}>
         <Masonry
           breakpointCols={{
             default: 4,
@@ -125,8 +125,10 @@ export default function Gallery() {
                         className={clsx(
                           'absolute z-0 blur-2xl transition-opacity duration-500 pointer-events-none',
                           {
-                            'opacity-100': showGlow,
-                            'group-hover:opacity-80 opacity-0': !showGlow,
+                            'opacity-100': showGlow && !isMobile,
+                            'opacity-30': showGlow && isMobile,
+                            'group-hover:opacity-80 opacity-0': !showGlow && !isTouchDevice,
+                            'opacity-0': !showGlow && isTouchDevice,
                           }
                         )}
                         style={{
