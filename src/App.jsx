@@ -1,6 +1,5 @@
 import Gallery from './Gallery';
 import logo from './assets/Personal_Brand_Logo.png';
-import xlogo from './assets/xlogo.png';
 import instalogo from './assets/instalogo.png';
 import footerlogo from './assets/footerlogo.png';
 import { useEffect } from 'react';
@@ -25,14 +24,22 @@ function App() {
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8">
         {/* Header */}
       <header className="pt-12 pb-8">
-        <div className="flex justify-between items-start md:items-center gap-6">
-            {/* Logo and Bio */}
-            <div className="flex flex-col items-start space-y-2 md:pl-3 lg:pl-5">
+        {/* Logo and Social Media Section */}
+        <div className="flex justify-between items-center gap-6 mb-6 md:pl-3 lg:pl-5">
             <img
                 src={logo}
                 alt="Logo"
                 className="w-24 h-auto object-contain"
             />
+            <div className="flex space-x-4 md:pr-3 lg:pr-5">
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <img src={instalogo} alt="Instagram" className="w-6 h-6 object-contain" />
+            </a>
+            </div>
+        </div>
+        
+        {/* Bio Section */}
+        <div className="md:pl-3 lg:pl-5">
             <p
                 className="whitespace-nowrap bg-gradient-to-b from-[#AFAFAF] to-[#606060] bg-clip-text text-transparent"
                 style={{
@@ -44,17 +51,6 @@ function App() {
             >
                 Based in Toronto. Sony a6700. Finding clarity in chaos.
             </p>
-            </div>
-
-            {/* Social Media */}
-            <div className="flex space-x-4 md:pr-3 lg:pr-5 pt-1">
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                <img src={xlogo} alt="X" className="w-6 h-6 object-contain" />
-            </a>
-            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                <img src={instalogo} alt="Instagram" className="w-6 h-6 object-contain" />
-            </a>
-            </div>
         </div>
         </header>
         {/* Gallery */}
