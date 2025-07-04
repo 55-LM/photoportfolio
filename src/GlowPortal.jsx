@@ -38,8 +38,9 @@ export default function GlowPortal({ src, left, top, width, height, show, opacit
         pointerEvents: show ? 'auto' : 'none',
         opacity: show ? 0.5 : 0,
         zIndex,
-        filter: 'blur(32px)',
+        filter: 'blur(48px) brightness(1.2)',
         transition: 'opacity 0.5s',
+        borderRadius: '50%',
       }}
     />,
     portalRoot
