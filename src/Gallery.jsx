@@ -13,7 +13,7 @@ export default function Gallery() {
   const [tappedIndex, setTappedIndex] = useState(null);
   const isTouchDevice = typeof window !== 'undefined' && 'ontouchstart' in window;
   const isMobile = typeof window !== 'undefined' && window.innerWidth <= 640;
-  const bleed = isMobile ? 4 : 16;
+  const bleed = isMobile ? 4 : 8;
   const [glowPortal, setGlowPortal] = useState({ show: false, src: null, left: 0, top: 0, width: 0, height: 0, opacity: 0.15 });
   const [scrollY, setScrollY] = useState(0);
 
@@ -173,7 +173,7 @@ export default function Gallery() {
             return (
               <div
                 key={i}
-                className="inline-block w-full mb-8 break-inside-avoid group cursor-pointer overflow-visible"
+                className="inline-block w-full mb-1 break-inside-avoid group cursor-pointer overflow-visible"
                 onMouseEnter={!isTouchDevice ? handleShowGlow : undefined}
                 onMouseLeave={!isTouchDevice ? handleHideGlow : undefined}
                 onTouchStart={isTouchDevice ? (e) => { handleShowGlow(e); handleClick(e); } : undefined}

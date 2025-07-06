@@ -36,10 +36,10 @@ export default function GlowPortal({ src, left, top, width, height, show, opacit
         width,
         height,
         pointerEvents: show ? 'auto' : 'none',
-        opacity: show ? 0.5 : 0,
+        opacity: show ? opacity : 0,
         zIndex,
         filter: 'blur(48px) brightness(1.2)',
-        transition: 'opacity 0.5s',
+        transition: 'all 0.3s ease-out',
         borderRadius: '50%',
       }}
     />,
