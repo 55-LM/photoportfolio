@@ -21,6 +21,8 @@ function App() {
 
   return (
     <div className="relative min-h-screen text-white bg-[#0C0C0C]">
+      {/* Top right to left window light beams removed */}
+      {/* (No beams-container or beam divs) */}
       <div className="max-w-screen-xl mx-auto px-4 sm:px-6 md:px-8">
         {/* Header */}
       <header className="pt-12 pb-8">
@@ -45,11 +47,12 @@ function App() {
                 style={{
                   fontFamily: 'Neue Montreal',
                   fontWeight: 300,
-                  fontSize: 'clamp(12px, 3vw, 20px)',
+                  fontSize: 'clamp(12px, 2.5vw, 18px)',
                   lineHeight: 1.2,
                 }}
             >
-                Based in Toronto. Sony a6700. Finding clarity in chaos.
+                Based in <span>Toronto</span>.
+                <span style={{ display: 'inline-block', marginLeft: '0.75em' }}>Finding <span>clarity</span> in <span>chaos</span>.</span>
             </p>
         </div>
         </header>

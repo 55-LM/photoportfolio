@@ -26,6 +26,7 @@ export default function GlowPortal({ src, left, top, width, height, show, opacit
 
   return createPortal(
     <img
+      className="gallery-glow"
       src={src}
       alt=""
       aria-hidden="true"
@@ -36,11 +37,10 @@ export default function GlowPortal({ src, left, top, width, height, show, opacit
         width,
         height,
         pointerEvents: show ? 'auto' : 'none',
-        opacity: show ? opacity : 0,
-        zIndex,
-        filter: 'blur(48px) brightness(1.2)',
-        transition: 'all 0.3s ease-out',
+        opacity: show ? Math.min(opacity * 1.5, 1) : 0, // Increase opacity
+        filter: 'blur(60px) brightness(1.5)', // Brighter and less diffused
         borderRadius: '50%',
+        transition: 'opacity 0.4s ease-in-out, left 0.2s ease, top 0.2s ease, width 0.2s ease, height 0.2s ease',
       }}
     />,
     portalRoot
